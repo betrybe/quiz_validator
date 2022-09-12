@@ -1,0 +1,14 @@
+name: 'Quiz'
+description: 'Valida a sintaxe de um quiz'
+inputs:
+  files:
+    description: 'Arquivos do PR'
+    required: true
+
+outputs:
+  result:
+    description: 'Comentário'
+
+runs:
+  using: 'node16'
+  main: 'index.js'
