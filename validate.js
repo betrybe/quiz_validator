@@ -25,7 +25,7 @@ async function validate(files){
 
     const comments = await Promise.all(files.map(async (filename) => {
 
-        const file = await readFile(`${root}/${filename}`, 'utf8' );
+        const file = await readFile(`.${root}/${filename}`, 'utf8' );
         const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
         const checks_result = checks.reduce((acc, check) => {
             const check_name = check[0]
