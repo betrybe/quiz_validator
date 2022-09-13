@@ -7,7 +7,7 @@ core.notice(root)
 //     .then((data) => core.notice(data))
 //     .catch((data) => core.error(data))
 
-const files = core.getInput('files').split(" ").splice(0, 1);
+const files = core.getInput('files').split(" ").filter(file => !file.includes(".yml"));
 core.notice(files)
 
 validate(files)
