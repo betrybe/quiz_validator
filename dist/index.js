@@ -9569,11 +9569,11 @@ async function validate(files){
 
     tables = tables.join('\n')
 
-    const comments = await github.issues.listComments({ owner, repo, issue_number: process.env.INPUT_PR_NUMBER });
+    const comments = await  client.rest.issues.listComments({ owner, repo, issue_number: process.env.INPUT_PR_NUMBER });
     const comment_id = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
     
     if (comment_id) {
-      github.issues.deleteComment({ owner, repo, comment_id });
+        client.rest.issues.deleteComment({ owner, repo, comment_id });
     }
 
     await client.rest.issues.createComment({
