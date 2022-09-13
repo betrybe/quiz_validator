@@ -13,7 +13,7 @@ readdir(`${root}/secao-11/licao-54/quiz`)
     .then((data) => core.notice(data))
     .catch((data) => core.error(data))
 
-readFile(`${root}/secao-11/licao-54/quiz/1.md`, 'utf8')
+readFile(`${root}/secao-11/licao-54/quiz/01.md`, 'utf8')
     .then((data) => core.notice(data))
     .catch((data) => core.error(data))
 
