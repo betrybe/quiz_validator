@@ -1,22 +1,22 @@
 const messages = {
    "check_answers": {
-      true: "check_answers",
+      true: "✅",
       false: "Nigga"
    },
    "check_codestrings": {
-      true: "check_codestrings",
+      true: "✅",
       false: "Nigga"
    },
    "check_feedbacks": {
-      true: "check_feedbacks",
+      true: "✅",
       false: "Nigga"
    },
    "check_codeblocks": {
-      true: "check_codeblocks",
+      true: "✅",
       false: "Nigga"
    },
    "check_question": {
-      true: "check_question",
+      true: "✅",
       false: "Nigga"
    }
 }

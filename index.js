@@ -11,4 +11,4 @@ core.notice(process.cwd())
 const files = core.getInput('files').split(" ").filter(file => !file.includes(".yml"));
 core.notice(files)
 
-validate(files)
+console.log(validate(files))
