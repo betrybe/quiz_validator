@@ -6,6 +6,7 @@ const { table } = require('console');
 const token = core.getInput('token', { required: true });
 const client = github.getOctokit(token);
 const { owner, repo } = github.context.issue;
+const issue_number = process.env.INPUT_PR_NUMBER
 
 const rules = [
     ['wrong_answers', "( )"],
@@ -30,36 +31,42 @@ const root = process.env.GITHUB_WORKSPACE || process.cwd();
 async function validate(files){
     core.notice(`🥱 Iniciando leitura ${files}`)
 
-    let tables = await Promise.all(files.map(async (filename) => {
+    try {
+        
+        let tables = await Promise.all(files.map(async (filename) => {
 
-        const file = await readFile(`${root}/${filename}`, 'utf8' );
-        const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
-        const checks_result = checks.reduce((acc, check) => {
-            const check_name = check[0]
-            const check_expected = check[1]
-            const check_rule = check[2]
-            acc[check_name] = check_expected !== null? check_compare(result, check_expected, check_rule) : check_remainder(result, check_rule)
-    
-            return acc
-        }, {})
+            const file = await readFile(`${root}/${filename}`, 'utf8' );
+            const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
+            const checks_result = checks.reduce((acc, check) => {
+                const check_name = check[0]
+                const check_expected = check[1]
+                const check_rule = check[2]
+                acc[check_name] = check_expected !== null? check_compare(result, check_expected, check_rule) : check_remainder(result, check_rule)
+        
+                return acc
+            }, {})
 
-        return comment(checks_result, filename)
-    }))
+            return comment(checks_result, filename)
+        }))
 
-    const comment = `## Errors de sintaxe encontrados\n${tables.join('\n')}`
-    const comments = await  client.rest.issues.listComments({ owner, repo, issue_number: process.env.INPUT_PR_NUMBER });
-    const comment_id = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
-    
-    if (comment_id) {
-        client.rest.issues.deleteComment({ owner, repo, comment_id });
+        const body = `## Errors de sintaxe encontrados\n${tables.join('\n')}`
+        const comments = await client.rest.issues.listComments({ owner, repo, issue_number });
+        const comment_id = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
+        
+        if (comment_id) {
+            client.rest.issues.deleteComment({ owner, repo, comment_id });
+        }
+
+        await client.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body
+        });
+
+    } catch (error) {
+        core.setFailed(`${error}`)
     }
-
-    await client.rest.issues.createComment({
-        owner,
-        repo,
-        issue_number: process.env.INPUT_PR_NUMBER,
-        body: comment,
-    });
 }
 
 function comment(checks_result, filename){
