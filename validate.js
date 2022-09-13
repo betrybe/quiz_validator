@@ -53,6 +53,8 @@ async function validate(files){
         const comments = await client.rest.issues.listComments({ owner, repo, issue_number });
         const comment_id = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
         
+        core.notice(` COMENTÁRIO id ${comment_id}`)
+        
         if (comment_id) {
             client.rest.issues.deleteComment({ owner, repo, comment_id });
         }
