@@ -8,7 +8,11 @@ core.notice(process.cwd())
 //     .then((data) => core.notice(data))
 //     .catch((data) => core.error(data))
 
-const files = core.getInput('files').split(" ").filter(file => !file.includes(".yml"));
+const files = core.getInput('files')
+    .split(" ")
+    .filter(file => !file.includes(".yml"));
 core.notice(files)
 
-console.log(validate(files))
+validate(files)
+    .then(console.log)
+    .catch(console.error)
