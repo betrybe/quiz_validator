@@ -9551,7 +9551,7 @@ const root = process.env.GITHUB_WORKSPACE || process.cwd();
 async function validate(files){
     core.notice(`🥱 Iniciando leitura ${files}`)
 
-    const tables = await Promise.all(files.map(async (filename) => {
+    let tables = await Promise.all(files.map(async (filename) => {
 
         const file = await readFile(`${root}/${filename}`, 'utf8' );
         const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
@@ -9565,10 +9565,12 @@ async function validate(files){
         }, {})
 
         return comment(checks_result, filename)
-    })).join('\n')
+    }))
+
+    tables = tables.join('\n')
 
     const comments = await github.issues.listComments({ owner, repo, issue_number: process.env.INPUT_PR_NUMBER });
-    const comment_id = comments.data.find(comment => comment.body.includes('Errors de sintaxe encontrados'));
+    const comment_id = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
     
     if (comment_id) {
       github.issues.deleteComment({ owner, repo, comment_id });
