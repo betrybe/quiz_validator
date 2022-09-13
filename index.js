@@ -7,7 +7,7 @@ readdir(root)
     .then((data) => core.notice(data))
     .catch((data) => core.error(data))
 
-const files = core.getInput('files').split(" ");
+const files = core.getInput('files').split(" ").shift();
 core.notice(["README.md"])
 
 validate(files)
