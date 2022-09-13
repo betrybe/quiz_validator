@@ -25,7 +25,7 @@ const root = process.env.GITHUB_WORKSPACE || process.cwd();
 async function validate(files){
     core.notice(`🥱 Iniciando leitura ${files}`)
 
-    const comments = await Promise.all(["README.md"].map(async (filename) => {
+    const comments = await Promise.all(files.map(async (filename) => {
 
         const file = await readFile(`${root}/${filename}`, 'utf8' );
         const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
