@@ -4,8 +4,8 @@ const messages = {
       false: "❌ Não foi possível identificar a alternativa correta."
    },
    "check_codestrings": {
-      true: "✅",
-      false: "Nigga"
+      true: "✅ Todos os códigos inline estão corretos",
+      false: "❌ Algum código inline não está com a sintaxe correta"
    },
    "check_feedbacks": {
       true: "✅ Feedback das alternativas ",
