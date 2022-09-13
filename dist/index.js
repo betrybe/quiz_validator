@@ -9573,12 +9573,12 @@ async function validate(files){
 
         const body = `## Errors de sintaxe encontrados\n${tables.join('\n')}`
         const comments = await client.rest.issues.listComments({ owner, repo, issue_number });
-        const comment_id = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
+        const comment = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
         
-        core.notice(` COMENTÁRIO id ${comment_id}`)
+        core.notice(` COMENTÁRIO id ${comment.id}`)
         
-        if (comment_id) {
-            client.rest.issues.deleteComment({ owner, repo, comment_id });
+        if (comment.id) {
+            client.rest.issues.deleteComment({ owner, repo, comment_id: comment.id });
         }
 
         await client.rest.issues.createComment({
