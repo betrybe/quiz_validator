@@ -2,6 +2,7 @@ const { readFile } = require('fs/promises')
 const Messages = require('./messages')
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { table } = require('console');
 const token = core.getInput('token', { required: true });
 const client = github.getOctokit(token);
 const { owner, repo } = github.context.issue;
@@ -29,7 +30,7 @@ const root = process.env.GITHUB_WORKSPACE || process.cwd();
 async function validate(files){
     core.notice(`🥱 Iniciando leitura ${files}`)
 
-    const tables = await Promise.all(files.map(async (filename) => {
+    let tables = await Promise.all(files.map(async (filename) => {
 
         const file = await readFile(`${root}/${filename}`, 'utf8' );
         const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
@@ -43,9 +44,9 @@ async function validate(files){
         }, {})
 
         return comment(checks_result, filename)
-    })).join('\n')
+    }))
 
-    const comment = `## Errors de sintaxe encontrados\n${tables}`
+    const comment = `## Errors de sintaxe encontrados\n${tables.join('\n')}`
     const comments = await  client.rest.issues.listComments({ owner, repo, issue_number: process.env.INPUT_PR_NUMBER });
     const comment_id = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
     

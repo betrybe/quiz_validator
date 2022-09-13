@@ -9524,6 +9524,7 @@ const { readFile } = __nccwpck_require__(3292)
 const Messages = __nccwpck_require__(8023)
 const core = __nccwpck_require__(1366);
 const github = __nccwpck_require__(1371);
+const { table } = __nccwpck_require__(6206);
 const token = core.getInput('token', { required: true });
 const client = github.getOctokit(token);
 const { owner, repo } = github.context.issue;
@@ -9551,7 +9552,7 @@ const root = process.env.GITHUB_WORKSPACE || process.cwd();
 async function validate(files){
     core.notice(`🥱 Iniciando leitura ${files}`)
 
-    const tables = await Promise.all(files.map(async (filename) => {
+    let tables = await Promise.all(files.map(async (filename) => {
 
         const file = await readFile(`${root}/${filename}`, 'utf8' );
         const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
@@ -9565,9 +9566,9 @@ async function validate(files){
         }, {})
 
         return comment(checks_result, filename)
-    })).join('\n')
+    }))
 
-    const comment = `## Errors de sintaxe encontrados\n${tables}`
+    const comment = `## Errors de sintaxe encontrados\n${tables.join('\n')}`
     const comments = await  client.rest.issues.listComments({ owner, repo, issue_number: process.env.INPUT_PR_NUMBER });
     const comment_id = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
     
@@ -9632,6 +9633,14 @@ module.exports = eval("require")("encoding");
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 6206:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("console");
 
 /***/ }),
 
