@@ -1,5 +1,6 @@
 const { readFile } = require('fs/promises')
 const Messages = require('./messages')
+const core = require('@actions/core');
 
 const rules = [
     ['wrong_answers', "( )"],
