@@ -29,7 +29,7 @@ const checks = [
 const root = process.env.GITHUB_WORKSPACE || process.cwd();
 
 async function validate(files){
-    core.notice(`🥱 Iniciando leitura ${files}`)
+    core.notice(` Iniciando leitura ${files}`)
 
     try {
         
@@ -51,12 +51,12 @@ async function validate(files){
 
         const body = `## Errors de sintaxe encontrados\n${tables.join('\n')}`
         const comments = await client.rest.issues.listComments({ owner, repo, issue_number });
-        const comment = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
+        const commentIssue = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
         
-        core.notice(` COMENTÁRIO id ${comment.id}`)
+        core.notice(` COMENTÁRIO id ${commentIssue.id}`)
         
-        if (comment.id) {
-            client.rest.issues.deleteComment({ owner, repo, comment_id: comment.id });
+        if (commentIssue) {
+            await client.rest.issues.deleteComment({ owner, repo, comment_id: commentIssue.id });
         }
 
         await client.rest.issues.createComment({
