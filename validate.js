@@ -46,7 +46,7 @@ async function validate(files){
     }))
 
 
-    await client.issues.createComment({
+    await client.rest.issues.createComment({
         owner,
         repo,
         issue_number: process.env.INPUT_PR_NUMBER,
