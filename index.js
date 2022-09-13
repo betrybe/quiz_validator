@@ -4,9 +4,13 @@ const { readdir } = require('fs/promises')
 const root = process.env.GITHUB_WORKSPACE || process.cwd();
 core.notice(root)
 core.notice(process.cwd())
-// readdir(root)
-//     .then((data) => core.notice(data))
-//     .catch((data) => core.error(data))
+readdir(root)
+    .then((data) => core.notice(data))
+    .catch((data) => core.error(data))
+
+readdir(`${root}/secao-11/licao-54/quiz`)
+    .then((data) => core.notice(data))
+    .catch((data) => core.error(data))
 
 const files = core.getInput('files')
     .split(" ")
