@@ -29,7 +29,7 @@ const root = process.env.GITHUB_WORKSPACE || process.cwd();
 async function validate(files){
     core.notice(`🥱 Iniciando leitura ${files}`)
 
-    let tables = await Promise.all(files.map(async (filename) => {
+    const tables = await Promise.all(files.map(async (filename) => {
 
         const file = await readFile(`${root}/${filename}`, 'utf8' );
         const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
@@ -43,10 +43,9 @@ async function validate(files){
         }, {})
 
         return comment(checks_result, filename)
-    }))
+    })).join('\n')
 
-    tables = tables.join('\n')
-
+    const comment = `## Errors de sintaxe encontrados\n${tables}`
     const comments = await  client.rest.issues.listComments({ owner, repo, issue_number: process.env.INPUT_PR_NUMBER });
     const comment_id = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
     
@@ -58,7 +57,7 @@ async function validate(files){
         owner,
         repo,
         issue_number: process.env.INPUT_PR_NUMBER,
-        body: tables,
+        body: comment,
     });
 }
 
@@ -69,12 +68,11 @@ function comment(checks_result, filename){
     if(is_successful_quiz(checks)) return '';
 
     const headTable = `| *${filename}* |\n| ------------- |\n`;
-    const title = `## Errors de sintaxe encontrados\n${headTable}`
     const table = Object
         .entries(checks_result)
         .reduce((acc, check) => `${acc}| ${Messages[check[0]][check[1]]} |\n`, '')
 
-    return `${title}${table}`
+    return `${headTable}${table}`
 }
 
 function is_successful_quiz(checks){
