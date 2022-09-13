@@ -46,6 +46,11 @@ async function validate(files){
 
 function comment(checks_result, filename){
 
+    const checks = Object.entries(checks_result)
+
+    if(is_successful_quiz(checks)) return '';
+
+
     const comment = `| *${filename}* |\n| ------------- |\n`;
     const table = Object
         .entries(checks_result)
@@ -54,6 +59,9 @@ function comment(checks_result, filename){
     return `${comment}${table}`
 }
 
+function is_successful_quiz(checks){
+    return !checks.some((check) => !check[1])
+}
 
 function check_compare(result, expected, rule){
     return expected[0] == result[rule[0]] && result[rule[1]] == expected[1]
