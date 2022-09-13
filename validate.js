@@ -4,8 +4,8 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const token = core.getInput('token', { required: true });
 const client = github.getOctokit(token);
-// const { owner, repo } = github.context.issue;
-const { issue: { number: issue_number }, repo: { owner, repo }  } = github.context;
+const { owner, repo } = github.context.issue;
+// const { issue: { number: issue_number }, repo: { owner, repo }  } = github.context;
 // const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
 
 const rules = [
@@ -47,7 +47,7 @@ async function validate(files){
         return comment(checks_result, filename)
     })).join('\n')
 
-    const comments = await github.issues.listComments({ owner, repo, issue_number });
+    const comments = await github.issues.listComments({ owner, repo, issue_number: process.env.INPUT_PR_NUMBER });
     const comment_id = comments.data.find(comment => comment.body.includes('Errors de sintaxe encontrados'));
     
     if (comment_id) {
