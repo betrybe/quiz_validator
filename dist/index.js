@@ -6,24 +6,24 @@
 
 const messages = {
    "check_answers": {
-      true: "✅",
-      false: "Nigga"
+      true: "✅ Número de alternativas",
+      false: "❌ Não foi possível identificar a alternativa correta."
    },
    "check_codestrings": {
       true: "✅",
       false: "Nigga"
    },
    "check_feedbacks": {
-      true: "✅",
-      false: "Nigga"
+      true: "✅ Feedback das alternativas ",
+      false: "❌ Não foi possível identificar todos os feedbacks das alternativas."
    },
    "check_codeblocks": {
-      true: "✅",
-      false: "Nigga"
+      true: "✅ Todos os blocos de código estão corretos",
+      false: "❌ Algum bloco de código está com a sintaxe errada"
    },
    "check_question": {
-      true: "✅",
-      false: "Nigga"
+      true: "✅ Enunciado abrindo e fechando corretamente",
+      false: "❌ O Enunciado não abrindo ou fechando corretamente"
    }
 }
 
