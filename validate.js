@@ -4,7 +4,9 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const token = core.getInput('token', { required: true });
 const client = github.getOctokit(token);
-const { owner, repo } = github.context.issue;
+// const { owner, repo } = github.context.issue;
+const { issue: { number: issue_number }, repo: { owner, repo }  } = github.context;
+// const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
 
 const rules = [
     ['wrong_answers', "( )"],
@@ -29,7 +31,7 @@ const root = process.env.GITHUB_WORKSPACE || process.cwd();
 async function validate(files){
     core.notice(`🥱 Iniciando leitura ${files}`)
 
-    const comments = await Promise.all(files.map(async (filename) => {
+    const tables = await Promise.all(files.map(async (filename) => {
 
         const file = await readFile(`${root}/${filename}`, 'utf8' );
         const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
@@ -43,17 +45,21 @@ async function validate(files){
         }, {})
 
         return comment(checks_result, filename)
-    }))
+    })).join('\n')
 
+    const comments = await github.issues.listComments({ owner, repo, issue_number });
+    const comment_id = comments.data.find(comment => comment.body.includes('Errors de sintaxe encontrados'));
+    
+    if (comment) {
+      github.issues.deleteComment({ owner, repo, comment_id });
+    }
 
     await client.rest.issues.createComment({
         owner,
         repo,
-        issue_number: process.env.INPUT_PR_NUMBER,
-        body: comments.join('\n'),
+        issue_number: issue_number,
+        body: tables,
     });
-
-    return comments.join('\n')
 }
 
 function comment(checks_result, filename){
@@ -62,13 +68,13 @@ function comment(checks_result, filename){
 
     if(is_successful_quiz(checks)) return '';
 
-
-    const comment = `| *${filename}* |\n| ------------- |\n`;
+    const headTable = `| *${filename}* |\n| ------------- |\n`;
+    const title = `## Errors de sintaxe encontrados\n${headTable}`
     const table = Object
         .entries(checks_result)
         .reduce((acc, check) => `${acc}| ${Messages[check[0]][check[1]]} |\n`, '')
 
-    return `${comment}${table}`
+    return `${title}${table}`
 }
 
 function is_successful_quiz(checks){
