@@ -6,8 +6,8 @@ core.notice(root)
 readdir(root)
     .then((data) => core.notice(data))
     .catch((data) => core.error(data))
-    
+
 const files = core.getInput('files').split(" ");
-core.notice(files)
+core.notice(["README.md"])
 
 validate(files)
