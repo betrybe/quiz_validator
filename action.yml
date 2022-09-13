@@ -4,6 +4,12 @@ inputs:
   files:
     description: 'Arquivos do PR'
     required: true
+  token:
+    description: 'token'
+    required: true
+  pr_number:
+    description: 'Pull Request number that dispatched the workflow'
+    required: true
 
 outputs:
   result:
@@ -11,4 +17,4 @@ outputs:
 
 runs:
   using: 'node16'
-  main: 'index.js'
+  main: 'dist/index.js'

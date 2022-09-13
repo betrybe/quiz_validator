@@ -1,6 +1,10 @@
 const { readFile } = require('fs/promises')
 const Messages = require('./messages')
 const core = require('@actions/core');
+const github = require('@actions/github');
+const token = core.getInput('token', { required: true });
+const client = github.getOctokit(token);
+const { owner, repo } = github.context.issue;
 
 const rules = [
     ['wrong_answers', "( )"],
@@ -40,6 +44,14 @@ async function validate(files){
 
         return comment(checks_result, filename)
     }))
+
+
+    await client.issues.createComment({
+        owner,
+        repo,
+        issue_number: process.env.INPUT_PR_NUMBER,
+        body: comments.join('\n'),
+    });
 
     return comments.join('\n')
 }
