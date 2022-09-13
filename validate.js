@@ -22,6 +22,7 @@ const checks = [
 const root = process.env.GITHUB_WORKSPACE || process.cwd();
 
 async function validate(files){
+    core.notice(`🥱 Iniciando leitura ${files}`)
 
     const comments = await Promise.all(files.map(async (filename) => {
 
