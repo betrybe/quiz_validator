@@ -50,7 +50,7 @@ async function validate(files){
     const comments = await github.issues.listComments({ owner, repo, issue_number });
     const comment_id = comments.data.find(comment => comment.body.includes('Errors de sintaxe encontrados'));
     
-    if (comment) {
+    if (comment_id) {
       github.issues.deleteComment({ owner, repo, comment_id });
     }
 
