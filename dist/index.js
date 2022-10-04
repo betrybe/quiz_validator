@@ -1,36 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 8023:
-/***/ ((module) => {
-
-const messages = {
-   "check_answers": {
-      true: "✅ Número de alternativas",
-      false: "❌ Não foi possível identificar a alternativa correta."
-   },
-   "check_codestrings": {
-      true: "✅ Todos os códigos inline estão corretos",
-      false: "❌ Algum código inline não está com a sintaxe correta"
-   },
-   "check_feedbacks": {
-      true: "✅ Feedback das alternativas ",
-      false: "❌ Não foi possível identificar todos os feedbacks das alternativas."
-   },
-   "check_codeblocks": {
-      true: "✅ Todos os blocos de código estão corretos",
-      false: "❌ Algum bloco de código está com a sintaxe errada"
-   },
-   "check_question": {
-      true: "✅ Enunciado abrindo e fechando corretamente",
-      false: "❌ O Enunciado não abrindo ou fechando corretamente"
-   }
-}
-
-module.exports = messages
-
-/***/ }),
-
 /***/ 8829:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -9517,112 +9487,198 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 7849:
+/***/ 4564:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const github = __nccwpck_require__(1371)
+const token = process.env.INPUT_TOKEN
+const issue_number = process.env.INPUT_PR_NUMBER
+const client = github.getOctokit(token)
+const { owner, repo } = github.context.issue
+
+async function createComment(body){
+	await client.rest.issues.createComment({
+		owner,
+		repo,
+		issue_number,
+		body
+	})
+}
+
+async function deleteComment(comment_id){
+	await client.rest.issues.deleteComment({ owner, repo, comment_id })
+}
+
+async function listComments(){
+	await client.rest.issues.listComments({ owner, repo, issue_number })
+}
+
+module.exports = {
+	createComment,
+	deleteComment, 
+	listComments
+}
+
+/***/ }),
+
+/***/ 2629:
+/***/ ((module) => {
+
+const messages = {
+	'check_answers': {
+		true: '✅ Número de alternativas',
+		false: '❌ Não foi possível identificar a alternativa correta.'
+	},
+	'check_codestrings': {
+		true: '✅ Todos os códigos inline estão corretos',
+		false: '❌ Algum código inline não está com a sintaxe correta'
+	},
+	'check_feedbacks': {
+		true: '✅ Feedback das alternativas ',
+		false: '❌ Não foi possível identificar todos os feedbacks das alternativas.'
+	},
+	'check_codeblocks': {
+		true: '✅ Todos os blocos de código estão corretos',
+		false: '❌ Algum bloco de código está com a sintaxe errada'
+	},
+	'check_question': {
+		true: '✅ Enunciado abrindo e fechando corretamente',
+		false: '❌ O Enunciado não está abrindo ou fechando corretamente'
+	}
+}
+
+module.exports = messages
+
+/***/ }),
+
+/***/ 2644:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const { readFile } = __nccwpck_require__(3292)
-const Messages = __nccwpck_require__(8023)
-const core = __nccwpck_require__(1366);
-const github = __nccwpck_require__(1371);
-const { table } = __nccwpck_require__(6206);
-const token = core.getInput('token', { required: true });
-const client = github.getOctokit(token);
-const { owner, repo } = github.context.issue;
-const issue_number = process.env.INPUT_PR_NUMBER
+const core = __nccwpck_require__(1366)
+const Messages = __nccwpck_require__(2629)
+const GitHubClient = __nccwpck_require__(4564)
 
 const rules = [
-    ['wrong_answers', "( )"],
-    ['right_answers', "(x)"],
-    ['open_curly', "{{"],
-    ['close_curly', "}}"],
-    ['codeblocks_count', "```"],
-    ['codestring_count', "`"],
-    ['open_question', "<<"],
-    ['close_question', ">>"]
+	['wrong_answers', '( )'],
+	['right_answers', '(x)'],
+	['open_curly', '{{'],
+	['close_curly', '}}'],
+	['codeblocks_count', '```'],
+	['codestring_count', '`'],
+	['open_question', '<<'],
+	['close_question', '>>']
 ]
 
 const checks = [
-    ['check_answers', [4, 1], ['wrong_answers', 'right_answers']],
-    ['check_codestrings', null, ['codestring_count']],
-    ['check_feedbacks', [5, 5], ['open_curly', 'close_curly']],
-    ['check_codeblocks', null, ['codeblocks_count']],
-    ['check_question', [1,1], ['open_question', 'close_question']]
+	['check_answers', [4, 1], ['wrong_answers', 'right_answers']],
+	['check_codestrings', null, ['codestring_count']],
+	['check_feedbacks', [5, 5], ['open_curly', 'close_curly']],
+	['check_codeblocks', null, ['codeblocks_count']],
+	['check_question', [1,1], ['open_question', 'close_question']]
 ]
-const root = process.env.GITHUB_WORKSPACE || process.cwd();
 
-async function validate(files){
-    core.notice(` Iniciando leitura ${files}`)
+async function validate(){
+	try {
 
-    try {
-        
-        let tables = await Promise.all(files.map(async (filename) => {
+		const files = process.env.FILES
+			.split(' ')
+			.filter(file => !file.includes('.yml'))
 
-            const file = await readFile(`${root}/${filename}`, 'utf8' );
-            const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
-            const checks_result = checks.reduce((acc, check) => {
-                const check_name = check[0]
-                const check_expected = check[1]
-                const check_rule = check[2]
-                acc[check_name] = check_expected !== null? check_compare(result, check_expected, check_rule) : check_remainder(result, check_rule)
-        
-                return acc
-            }, {})
+		core.notice(`Iniciando leitura ${files}`)
+		
+		const checkResult = await validateRules(files)
+		const fullComment = buildFullComment(checkResult)
 
-            return comment(checks_result, filename)
-        }))
+		await maybeDeletePreviousComment()
+		await GitHubClient.createComment(fullComment)
 
-        const body = `## Errors de sintaxe encontrados\n${tables.join('\n')}`
-        const comments = await client.rest.issues.listComments({ owner, repo, issue_number });
-        const commentIssue = comments.data.find(comment => comment.body.includes('## Errors de sintaxe encontrados'));
-        
-        core.notice(` COMENTÁRIO id ${commentIssue.id}`)
-        
-        if (commentIssue) {
-            await client.rest.issues.deleteComment({ owner, repo, comment_id: commentIssue.id });
-        }
+		return checkResult
 
-        await client.rest.issues.createComment({
-            owner,
-            repo,
-            issue_number,
-            body
-        });
-
-    } catch (error) {
-        core.setFailed(`${error}`)
-    }
+	} catch (error) {
+		console.error(error)
+		core.setFailed(`${error}`)
+	}
 }
 
-function comment(checks_result, filename){
+async function maybeDeletePreviousComment(){
 
-    const checks = Object.entries(checks_result)
+	try {
+		const comments = await GitHubClient.listComments()
 
-    if(is_successful_quiz(checks)) return '';
+		const commentIssue = comments?.data?.find(comment => comment.body.includes('## ❌ Errors de sintaxe encontrados'))
+		
+		if (commentIssue) {
+			await GitHubClient.deleteComment(commentIssue.id)
+		}
+	
+	} catch (error) {
+		console.error(error)
+	}
+}
 
-    const headTable = `| *${filename}* |\n| ------------- |\n`;
-    const table = Object
-        .entries(checks_result)
-        .reduce((acc, check) => `${acc}| ${Messages[check[0]][check[1]]} |\n`, '')
+async function validateRules(files){
+	const promises = files.map(async (filename) => {
+		const checks_result = await evaluate(filename)
+		return { tableText: buildTable(checks_result, filename), objectResult: checks_result } 
+	})
 
-    return `${headTable}${table}`
+	return await Promise.all(promises)
+}
+
+function buildFullComment(checkResult){
+	const tables = checkResult.map((item) => item.tableText)
+	const tableComment = tables.join('\n')
+
+	if(tableComment === '') return '### ✅ Nenhum erro de sintaxe foi encontrado 💚👏🏾'
+	return `## ❌ Errors de sintaxe encontrados\n${tableComment}`
+}
+
+async function evaluate (filename){
+
+	const root = process.env.GITHUB_WORKSPACE || process.cwd()
+	const file = await readFile(`${root}/${filename}`, 'utf8' )
+	const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
+	return checks.reduce((acc, check) => {
+		const check_name = check[0]
+		const check_expected = check[1]
+		const check_rule = check[2]
+		acc[check_name] = check_expected !== null? check_compare(result, check_expected, check_rule) : check_remainder(result, check_rule)
+
+		return acc
+	}, {})
+}
+
+function buildTable(checks_result, filename){
+
+	const checks = Object.entries(checks_result)
+
+	if(is_successful_quiz(checks)) return ''
+
+	const headTable = `| *${filename}* |\n| ------------- |\n`
+	const table = Object
+		.entries(checks_result)
+		.reduce((acc, check) => `${acc}| ${Messages[check[0]][check[1]]} |\n`, '')
+
+	return `${headTable}${table}`
 }
 
 function is_successful_quiz(checks){
-    return !checks.some((check) => !check[1])
+	return !checks.some((check) => !check[1])
 }
 
 function check_compare(result, expected, rule){
-    return expected[0] == result[rule[0]] && result[rule[1]] == expected[1]
+	return expected[0] == result[rule[0]] && result[rule[1]] == expected[1]
 }
 
 function check_remainder(result, rule){
-    return result[rule[0]] % 2 == 0
+	return result[rule[0]] % 2 == 0
 }
 
 function split_and_count_by_separator(file, object, key, separator){
-   const value = file.split(separator).length
-   object[key] = value - 1
-   return object
+	const value = file.split(separator).length
+	object[key] = value - 1
+	return object
 }
 
 module.exports = validate
@@ -9642,14 +9698,6 @@ module.exports = eval("require")("encoding");
 
 "use strict";
 module.exports = require("assert");
-
-/***/ }),
-
-/***/ 6206:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("console");
 
 /***/ }),
 
@@ -9822,16 +9870,15 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const validate = __nccwpck_require__(7849)
-const core = __nccwpck_require__(1366);
-const root = process.env.GITHUB_WORKSPACE || process.cwd();
-const files = core.getInput('files')
-    .split(" ")
-    .filter(file => !file.includes(".yml"));
-
+const validate = __nccwpck_require__(2644)
+const files = process.env.FILES
+	.split(' ')
+	.filter(file => !file.includes('.yml'))
+    
 validate(files)
-    .then(console.log)
-    .catch(console.error)
+	.then(console.log)
+	.catch(console.error)   
+
 })();
 
 module.exports = __webpack_exports__;
