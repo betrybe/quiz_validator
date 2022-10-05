@@ -30,14 +30,14 @@ async function validate(){
 			.split(' ')
 			.filter(file => !file.includes('.yml'))
 
-		core.debug(`📃 Arquivos -> ${files}`)
+		core.info(`\u001b[38;5;6m 📃 Arquivos -> ${files}`)
 		
 		const checkResult = await validateRules(files)
 		const fullComment = buildFullComment(checkResult)
 
 		await maybeDeletePreviousComment()
 		await GitHubClient.createComment(fullComment)
-		core.notice('💬 Cria comentário no PR')
+		core.info('\u001b[38;5;6m 💬 Cria comentário no PR')
 
 		return checkResult
 
@@ -49,11 +49,12 @@ async function validate(){
 async function maybeDeletePreviousComment(){
 	try {
 		const comments = await GitHubClient.listComments()
+		core.info(`\u001b[38;5;6m 💬 Quantidade de comentários no PR -> ${comments.length}`)
 
-		const commentIssue = comments?.data?.find(comment => comment.body.includes('## ❌ Errors de sintaxe encontrados'))
+		const commentIssue = comments?.data.find(comment => comment.body.includes('## ❌ Errors de sintaxe encontrados'))
 		
 		if (commentIssue) {
-			core.notice(`🗑 Deleta comentário antigo -> ${commentIssue.id}`)
+			core.info(`\u001b[38;5;6m 🗑 Deleta comentário antigo -> ${commentIssue.id}`)
 			await GitHubClient.deleteComment(commentIssue.id)
 		}
 	
