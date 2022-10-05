@@ -34,7 +34,7 @@ async function validate(){
 		
 		const checkResult = await validateRules(files)
 		const fullComment = buildFullComment(checkResult)
-
+		
 		await maybeDeletePreviousComment()
 		await GitHubClient.createComment(fullComment)
 		core.info('\u001b[38;5;6m 💬 Cria comentário no PR')
@@ -72,9 +72,9 @@ async function validateRules(files){
 
 function buildFullComment(checkResult){
 	const tables = checkResult.map((item) => item.tableText)
-	const tableComment = tables.join('\n')
+	const tableComment = tables.join('\n').trim()
 
-	if(tableComment === '') return '### ✅ Nenhum erro de sintaxe foi encontrado 💚👏🏾'
+	if(tableComment === '') return '### ✅ Nenhum erro de sintaxe foi encontrado 💚👏'
 	return `## ❌ Errors de sintaxe encontrados\n${tableComment}`
 }
 

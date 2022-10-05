@@ -38,7 +38,7 @@ describe('Test quiz validator', () =>{
 		const expectedText = 'Não foi possível identificar a alternativa correta.'
 
 		expect(tableText).toEqual(expect.stringContaining(expectedText))
-		expect(objectResult).toEqual( expect.objectContaining({check_answers: false}))
+		expect(objectResult).toEqual(expect.objectContaining({check_answers: false}))
 	})
 
 	test('must return with check_feedbacks false', async () => {
@@ -48,7 +48,7 @@ describe('Test quiz validator', () =>{
 		const expectedText = 'Não foi possível identificar todos os feedbacks das alternativas.'
 
 		expect(tableText).toEqual(expect.stringContaining(expectedText))
-		expect(objectResult).toEqual( expect.objectContaining({check_feedbacks: false}))
+		expect(objectResult).toEqual(expect.objectContaining({check_feedbacks: false}))
 	})
 
 	test('must return with check_question false', async () => {
@@ -58,7 +58,7 @@ describe('Test quiz validator', () =>{
 		const expectedText = 'O Enunciado não está abrindo ou fechando corretamente'
 
 		expect(tableText).toEqual(expect.stringContaining(expectedText))
-		expect(objectResult).toEqual( expect.objectContaining({check_question: false}))
+		expect(objectResult).toEqual(expect.objectContaining({check_question: false}))
 	})
 
 	test('must return with check_codeblocks false', async () => {
@@ -68,7 +68,7 @@ describe('Test quiz validator', () =>{
 		const expectedText = 'Algum bloco de código está com a sintaxe errada'
 
 		expect(tableText).toEqual(expect.stringContaining(expectedText))
-		expect(objectResult).toEqual( expect.objectContaining({check_codeblocks: false}))
+		expect(objectResult).toEqual(expect.objectContaining({check_codeblocks: false}))
 	})
 
 	test('must return with check_codestrings false', async () => {
@@ -78,7 +78,7 @@ describe('Test quiz validator', () =>{
 		const expectedText = 'Algum código inline não está com a sintaxe correta'
 
 		expect(tableText).toEqual(expect.stringContaining(expectedText))
-		expect(objectResult).toEqual( expect.objectContaining({check_codestrings: false}))
+		expect(objectResult).toEqual(expect.objectContaining({check_codestrings: false}))
 	})
 
 })
