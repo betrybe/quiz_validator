@@ -18,7 +18,10 @@ const messages = {
 	'check_question': {
 		true: '✅ Enunciado abrindo e fechando corretamente',
 		false: '❌ O Enunciado não está abrindo ou fechando corretamente'
-	}
+	},
+	'success': '### ✅ Nenhum erro de sintaxe foi encontrado 💚👏',
+	'error': '## ❌ Errors de sintaxe encontrados',
+	'supported': '> supported by [Diagnóstico](https://betrybe.slack.com/archives/C01Q3PY8LLW) 💚'
 }
 
 module.exports = messages

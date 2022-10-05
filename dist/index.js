@@ -9545,7 +9545,10 @@ const messages = {
 	'check_question': {
 		true: '✅ Enunciado abrindo e fechando corretamente',
 		false: '❌ O Enunciado não está abrindo ou fechando corretamente'
-	}
+	},
+	'success': '### ✅ Nenhum erro de sintaxe foi encontrado 💚👏',
+	'error': '## ❌ Errors de sintaxe encontrados',
+	'supported': '> supported by [Diagnóstico](https://betrybe.slack.com/archives/C01Q3PY8LLW) 💚'
 }
 
 module.exports = messages
@@ -9608,7 +9611,9 @@ async function validate(){
 async function maybeDeletePreviousComment(){
 	try {
 		const comments = await GitHubClient.listComments()
-		const commentIssue = comments?.data.find(comment => comment.body.includes('## ❌ Errors de sintaxe encontrados'))
+		const commentIssue = comments?.data.find(comment => 
+			comment.body.includes(Messages.error) || comment.body.includes(Messages.success)
+		)
 		
 		if (commentIssue) {
 			core.info(`\u001b[38;5;6m 🗑 Deleta comentário antigo -> ${commentIssue.id}`)
@@ -9634,8 +9639,8 @@ function buildFullComment(checkResult){
 	const tableComment = tables.join('\n').trim()
 	core.debug(`tableComment(${tableComment.length}) -> ${tableComment}`)
 
-	if(tableComment === '') return '### ✅ Nenhum erro de sintaxe foi encontrado 💚👏'
-	return `## ❌ Errors de sintaxe encontrados\n${tableComment}`
+	if(tableComment === '') return `${Messages.success}\n${Messages.supported}`
+	return `${Messages.success}\n${tableComment}\n${Messages.supported}`
 }
 
 async function evaluate (filename){
