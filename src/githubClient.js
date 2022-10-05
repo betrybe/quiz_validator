@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const github = require('@actions/github')
 const token = process.env.INPUT_TOKEN
 const issue_number = process.env.INPUT_PR_NUMBER

@@ -15,7 +15,7 @@ describe('Test quiz validator', () =>{
 	})
 
 	test('must return with any check false', async () => {
-		process.env.FILES = 'src/test/data/perfect_example.md'
+		process.env.INPUT_FILES = 'src/test/data/perfect_example.md'
 		const result = await validate()
 		expect(result).toEqual([
 			{
@@ -32,7 +32,7 @@ describe('Test quiz validator', () =>{
 	})
 
 	test('must return with check_answers false', async () => {
-		process.env.FILES = 'src/test/data/check_answers_example.md'
+		process.env.INPUT_FILES = 'src/test/data/check_answers_example.md'
 		const result = await validate()
 		const {tableText, objectResult} = result.pop()
 		const expectedText = 'Não foi possível identificar a alternativa correta.'
@@ -42,7 +42,7 @@ describe('Test quiz validator', () =>{
 	})
 
 	test('must return with check_feedbacks false', async () => {
-		process.env.FILES = 'src/test/data/check_feedbacks_example.md'
+		process.env.INPUT_FILES = 'src/test/data/check_feedbacks_example.md'
 		const result = await validate()
 		const {tableText, objectResult} = result.pop()
 		const expectedText = 'Não foi possível identificar todos os feedbacks das alternativas.'
@@ -52,7 +52,7 @@ describe('Test quiz validator', () =>{
 	})
 
 	test('must return with check_question false', async () => {
-		process.env.FILES = 'src/test/data/check_question_example.md'
+		process.env.INPUT_FILES = 'src/test/data/check_question_example.md'
 		const result = await validate()
 		const {tableText, objectResult} = result.pop()
 		const expectedText = 'O Enunciado não está abrindo ou fechando corretamente'
@@ -62,7 +62,7 @@ describe('Test quiz validator', () =>{
 	})
 
 	test('must return with check_codeblocks false', async () => {
-		process.env.FILES = 'src/test/data/check_codeblocks_example.md'
+		process.env.INPUT_FILES = 'src/test/data/check_codeblocks_example.md'
 		const result = await validate()
 		const {tableText, objectResult} = result.pop()
 		const expectedText = 'Algum bloco de código está com a sintaxe errada'
@@ -72,7 +72,7 @@ describe('Test quiz validator', () =>{
 	})
 
 	test('must return with check_codestrings false', async () => {
-		process.env.FILES = 'src/test/data/check_codestrings_example.md'
+		process.env.INPUT_FILES = 'src/test/data/check_codestrings_example.md'
 		const result = await validate()
 		const {tableText, objectResult} = result.pop()
 		const expectedText = 'Algum código inline não está com a sintaxe correta'
