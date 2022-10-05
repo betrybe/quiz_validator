@@ -9587,35 +9587,35 @@ async function validate(){
 			.split(' ')
 			.filter(file => !file.includes('.yml'))
 
-		core.notice(`Iniciando leitura ${files}`)
+		core.debug(`📃 Arquivos -> ${files}`)
 		
 		const checkResult = await validateRules(files)
 		const fullComment = buildFullComment(checkResult)
 
 		await maybeDeletePreviousComment()
 		await GitHubClient.createComment(fullComment)
+		core.notice('💬 Cria comentário no PR')
 
 		return checkResult
 
 	} catch (error) {
-		console.error(error)
 		core.setFailed(`${error}`)
 	}
 }
 
 async function maybeDeletePreviousComment(){
-
 	try {
 		const comments = await GitHubClient.listComments()
 
 		const commentIssue = comments?.data?.find(comment => comment.body.includes('## ❌ Errors de sintaxe encontrados'))
 		
 		if (commentIssue) {
+			core.notice(`🗑 Deleta comentário antigo -> ${commentIssue.id}`)
 			await GitHubClient.deleteComment(commentIssue.id)
 		}
 	
 	} catch (error) {
-		console.error(error)
+		core.warning(`🗑 Erro ao deletar comentário -> ${error}`)
 	}
 }
 
