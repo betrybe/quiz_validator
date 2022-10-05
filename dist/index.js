@@ -9548,7 +9548,8 @@ const messages = {
 	},
 	'success': '### ✅ Nenhum erro de sintaxe foi encontrado 💚👏',
 	'error': '## ❌ Errors de sintaxe encontrados',
-	'supported': '> supported by [Diagnóstico](https://betrybe.slack.com/archives/C01Q3PY8LLW) 💚'
+	'supported': '> supported by [Diagnóstico](https://betrybe.slack.com/archives/C01Q3PY8LLW) 💚',
+	'sac': '🔗 Para mais informações sobre a sintaxe acesse [Quizzes Playbook](https://playbook.betrybe.com/docs/funcionais/squads-multifuncionais/tribos/aprendizagem/squad-diagnostico/quizzes/#criaratualizar-quiz-em-flagship)'
 }
 
 module.exports = messages
@@ -9640,7 +9641,7 @@ function buildFullComment(checkResult){
 	core.debug(`tableComment(${tableComment.length}) -> ${tableComment}`)
 
 	if(tableComment === '') return `${Messages.success}\n${Messages.supported}`
-	return `${Messages.success}\n${tableComment}\n${Messages.supported}`
+	return `${Messages.error}\n${Messages.sac}\n${tableComment}\n${Messages.supported}`
 }
 
 async function evaluate (filename){
