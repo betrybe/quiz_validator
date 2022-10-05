@@ -9606,8 +9606,6 @@ async function validate(){
 async function maybeDeletePreviousComment(){
 	try {
 		const comments = await GitHubClient.listComments()
-		core.info(`\u001b[38;5;6m 💬 Quantidade de comentários no PR -> ${comments.length}`)
-
 		const commentIssue = comments?.data.find(comment => comment.body.includes('## ❌ Errors de sintaxe encontrados'))
 		
 		if (commentIssue) {
