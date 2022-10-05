@@ -9581,7 +9581,7 @@ const checks = [
 async function validate(){
 	try {
 
-		const files = process.env.FILES
+		const files = process.env.INPUT_FILES
 			.split(' ')
 			.filter(file => !file.includes('.yml'))
 
@@ -9871,11 +9871,8 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const validate = __nccwpck_require__(2644)
-const files = process.env.FILES
-	.split(' ')
-	.filter(file => !file.includes('.yml'))
     
-validate(files)
+validate()
 	.then(console.log)
 	.catch(console.error)   
 
