@@ -8,3 +8,4 @@
 
 ## Validadores para implementar
 - [ ] ()`TEXTO - Validar se o acento grave está colocado com o parenteses
+- [ ] Remover arquivos markdown nao validos, ex: '.yml','template.md','repo.md', 'metadados.md', 'README.md', 'index.md'
