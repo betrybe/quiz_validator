@@ -9548,8 +9548,9 @@ const messages = {
 	},
 	'success': '### ✅ Nenhum erro de sintaxe foi encontrado 💚👏',
 	'error': '## ⚠️ Errors de sintaxe encontrados',
-	'supported': '> supported by [Diagnóstico](https://betrybe.slack.com/archives/C01Q3PY8LLW) 💚',
-	'sac': '🔗 Para mais informações sobre a sintaxe acesse [Quizzes Playbook](https://playbook.betrybe.com/docs/funcionais/squads-multifuncionais/tribos/aprendizagem/squad-diagnostico/quizzes/#criaratualizar-quiz-em-flagship)'
+	'supported': '###### supported by [Diagnóstico](https://betrybe.slack.com/archives/C01Q3PY8LLW) 💚',
+	'sac': '🔗 Para mais informações sobre a sintaxe acesse [Quizzes Playbook](https://playbook.betrybe.com/docs/funcionais/squads-multifuncionais/tribos/aprendizagem/squad-diagnostico/quizzes/#criaratualizar-quiz-em-flagship)',
+	'observation': '###### ℹ️ Caso apareça arquivos que não estejam no _pull request_, tente atualizar sua _branch_ com a _branch_ principal'
 }
 
 module.exports = messages
@@ -9640,7 +9641,7 @@ function buildFullComment(checkResult){
 	core.debug(`tableComment(${tableComment.length}) -> ${tableComment}`)
 
 	if(tableComment === '') return `${Messages.success}\n${Messages.supported}`
-	return `${Messages.error}\n${Messages.sac}\n${tableComment}\n${Messages.supported}`
+	return `${Messages.error}\n${Messages.sac}\n${tableComment}\n${Messages.observation}\n${Messages.supported}`
 }
 
 async function evaluate (filename){

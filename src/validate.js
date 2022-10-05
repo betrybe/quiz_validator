@@ -79,7 +79,7 @@ function buildFullComment(checkResult){
 	core.debug(`tableComment(${tableComment.length}) -> ${tableComment}`)
 
 	if(tableComment === '') return `${Messages.success}\n${Messages.supported}`
-	return `${Messages.error}\n${Messages.sac}\n${tableComment}\n${Messages.supported}`
+	return `${Messages.error}\n${Messages.sac}\n${tableComment}\n${Messages.observation}\n${Messages.supported}`
 }
 
 async function evaluate (filename){
