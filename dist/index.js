@@ -9511,7 +9511,7 @@ async function deleteComment(comment_id){
 }
 
 async function listComments(){
-	await client.rest.issues.listComments({ owner, repo, issue_number })
+	return await client.rest.issues.listComments({ owner, repo, issue_number })
 }
 
 module.exports = {
