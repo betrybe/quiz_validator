@@ -25,7 +25,7 @@ const checks = [
 async function validate(){
 	try {
 
-		const files = process.env.FILES
+		const files = process.env.INPUT_FILES
 			.split(' ')
 			.filter(file => !file.includes('.yml'))
 
