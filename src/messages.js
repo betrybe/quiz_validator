@@ -20,7 +20,7 @@ const messages = {
 		false: '❌ O Enunciado não está abrindo ou fechando corretamente'
 	},
 	'success': '### ✅ Nenhum erro de sintaxe foi encontrado 💚👏',
-	'error': '## ❌ Errors de sintaxe encontrados',
+	'error': '## ⚠️ Errors de sintaxe encontrados',
 	'supported': '> supported by [Diagnóstico](https://betrybe.slack.com/archives/C01Q3PY8LLW) 💚',
 	'sac': '🔗 Para mais informações sobre a sintaxe acesse [Quizzes Playbook](https://playbook.betrybe.com/docs/funcionais/squads-multifuncionais/tribos/aprendizagem/squad-diagnostico/quizzes/#criaratualizar-quiz-em-flagship)'
 }

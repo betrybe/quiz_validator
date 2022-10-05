@@ -36,7 +36,6 @@ async function validate(){
 		const fullComment = buildFullComment(checkResult)
 		core.debug(`💬 Comentário -> ${fullComment}`)
 
-
 		await maybeDeletePreviousComment()
 		await GitHubClient.createComment(fullComment)
 		core.info('\u001b[38;5;6m 💬 Cria comentário no PR')
