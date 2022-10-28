@@ -14,6 +14,13 @@ const rules = [
 	['open_question', '<<'],
 	['close_question', '>>']
 ]
+const invalidFiles = [
+	'template.md',
+	'repo.md',
+	'metadados.md',
+	'README.md',
+	'index.md'
+]
 
 const checks = [
 	['check_answers', [4, 1], ['wrong_answers', 'right_answers']],
@@ -26,9 +33,12 @@ const checks = [
 async function validate(){
 	try {
 
-		const files = process.env.INPUT_FILES
-			.split(' ')
-			.filter(file => !file.includes('.yml'))
+		const files = getFiles()
+		
+		if(files === []){
+			core.info('\u001b[38;5;6m 🤷 Nenhum Arquivo Encontrado')
+			return
+		} 
 
 		core.info(`\u001b[38;5;6m 📃 Arquivos -> ${files}`)
 		
@@ -45,6 +55,13 @@ async function validate(){
 	} catch (error) {
 		core.setFailed(`${error}`)
 	}
+}
+
+function getFiles() {
+	return process.env.INPUT_FILES
+		.split(' ')
+		.filter(file => !file.includes('.yml'))
+		.filter(file => !invalidFiles.includes(file))	
 }
 
 async function maybeDeletePreviousComment(){
