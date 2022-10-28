@@ -34,7 +34,7 @@ async function validate(){
 	try {
 
 		const files = getFiles()
-		
+
 		if(files === []){
 			core.info('\u001b[38;5;6m 🤷 Nenhum Arquivo Encontrado')
 			return
@@ -61,6 +61,7 @@ function getFiles() {
 	return process.env.INPUT_FILES
 		.split(' ')
 		.filter(file => !file.includes('.yml'))
+		.filter(file => !file.includes('.xml'))
 		.filter(file => !invalidFiles.includes(file))	
 }
 
