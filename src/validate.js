@@ -62,8 +62,10 @@ function getFiles() {
 		.split(' ')
 		.filter(file => !file.includes('.yml'))
 		.filter(file => !file.includes('.xml'))
-		.filter(file => !invalidFiles.includes(file))	
+		.filter(file => !invalidFiles.includes(file))
+		.filter(isNumericPath)
 }
+
 
 async function maybeDeletePreviousComment(){
 	try {
@@ -119,7 +121,7 @@ function buildTable(checks_result, filename){
 
 	const checks = Object.entries(checks_result)
 
-	if(is_successful_quiz(checks)) return ''
+	if(isSuccessfulQuiz(checks)) return ''
 
 	const headTable = `| *${filename}* |\n| ------------- |\n`
 	const table = Object
@@ -129,7 +131,7 @@ function buildTable(checks_result, filename){
 	return `${headTable}${table}`
 }
 
-function is_successful_quiz(checks){
+function isSuccessfulQuiz(checks){
 	return !checks.some((check) => !check[1])
 }
 
@@ -145,6 +147,12 @@ function split_and_count_by_separator(file, object, key, separator){
 	const value = file.split(separator).length
 	object[key] = value - 1
 	return object
+}
+
+function isNumericPath(path) {
+	const filename = path.split('/').pop()
+	const name = filename.split('.')[0]
+	return !isNaN(name)
 }
 
 module.exports = validate
