@@ -37,6 +37,7 @@ async function validate(){
 
 		if(!files.length){
 			core.info('\u001b[38;5;6m 🤷 Nenhum Arquivo Encontrado')
+			await maybeDeletePreviousComment()
 			return false
 		} 
 
