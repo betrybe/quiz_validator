@@ -81,9 +81,9 @@ describe('Test quiz validator', () =>{
 		expect(objectResult).toEqual(expect.objectContaining({check_codestrings: false}))
 	})
 
-	test('must return a empty array when no files pass by the filters', async () => {
+	test('must return false when no files pass by the filters', async () => {
 		process.env.INPUT_FILES = 'src/test/data/perfect_quiz_example.md'
 		const result = await validate()
-		expect(result).toEqual([])
+		expect(result).toEqual(false)
 	})
 })

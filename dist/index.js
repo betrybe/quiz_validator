@@ -9597,9 +9597,10 @@ async function validate(){
 
 		const files = getFiles()
 
-		if(files === []){
+		if(!files.length){
 			core.info('\u001b[38;5;6m 🤷 Nenhum Arquivo Encontrado')
-			return
+			await maybeDeletePreviousComment()
+			return false
 		} 
 
 		core.info(`\u001b[38;5;6m 📃 Arquivos -> ${files}`)
