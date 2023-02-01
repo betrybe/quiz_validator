@@ -9623,8 +9623,7 @@ async function validate(){
 function getFiles() {
 	return process.env.INPUT_FILES
 		.split(' ')
-		.filter(file => !file.includes('.yml'))
-		.filter(file => !file.includes('.xml'))
+		.filter(isMarkdown)
 		.filter(file => !invalidFiles.includes(file))
 		.filter(isNumericPath)
 }
@@ -9716,6 +9715,10 @@ function isNumericPath(path) {
 	const filename = path.split('/').pop()
 	const name = filename.split('.')[0]
 	return !isNaN(name)
+}
+
+function isMarkdown(path){
+	return path.includes('.md')
 }
 
 module.exports = validate
