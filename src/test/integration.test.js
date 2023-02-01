@@ -86,4 +86,12 @@ describe('Test quiz validator', () =>{
 		const result = await validate()
 		expect(result).toEqual(false)
 	})
+
+	test('must return false when no files is markdown', async () => {
+		const files = ['test.js', 'test.yml', 'test.html', 'test.md', 'metadados.md', '.cspell.json']
+		process.env.INPUT_FILES = files.concat(' ')
+
+		const result = await validate()
+		expect(result).toEqual(false)
+	})
 })
