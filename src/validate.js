@@ -22,10 +22,10 @@ const invalidFiles = [
 	'index.md'
 ]
 
-const buildChecks = (questionCount) => [
-	['check_answers', [questionCount - 1, 1], ['wrong_answers', 'right_answers']],
+const checks = [
+	['check_answers', [4, 1], ['wrong_answers', 'right_answers']],
 	['check_codestrings', null, ['codestring_count']],
-	['check_feedbacks', [questionCount, questionCount], ['open_curly', 'close_curly']],
+	['check_feedbacks', [5, 5], ['open_curly', 'close_curly']],
 	['check_codeblocks', null, ['codeblocks_count']],
 	['check_question', [1,1], ['open_question', 'close_question']]
 ]
@@ -65,6 +65,7 @@ function getFiles() {
 		.filter(file => !invalidFiles.includes(file))
 		.filter(isNumericPath)
 }
+
 
 async function maybeDeletePreviousComment(){
 	try {
@@ -106,7 +107,6 @@ async function evaluate (filename){
 	const root = process.env.GITHUB_WORKSPACE || process.cwd()
 	const file = await readFile(`${root}/${filename}`, 'utf8' )
 	const result = rules.reduce((acc, rule) => split_and_count_by_separator(file, acc, rule[0], rule[1]), {})
-	const checks = buildChecks(result['wrong_answers'] + 1)
 	return checks.reduce((acc, check) => {
 		const check_name = check[0]
 		const check_expected = check[1]
